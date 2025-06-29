@@ -1,0 +1,50 @@
+@startuml 佣金审批状态机
+
+skinparam state {
+    BackgroundColor<<PENDING>> LightYellow
+    BackgroundColor<<APPROVED>> LightGreen
+    BackgroundColor<<REJECTED>> LightPink
+    BackgroundColor<<CANCELLED>> LightGray
+    ArrowColor Black
+    StateFontSize 14
+}
+
+state "待审核" as PENDING <<PENDING>>
+state "审核通过" as APPROVED <<APPROVED>>
+state "审核拒绝" as REJECTED <<REJECTED>>
+state "申请人撤销" as CANCELLED <<CANCELLED>>
+
+[*] --> PENDING : 提交申请
+PENDING --> APPROVED : 审核通过
+PENDING --> REJECTED : 审核拒绝
+PENDING --> CANCELLED : 申请人撤销\n(主动取消)
+
+APPROVED --> [*] : 审批完成
+REJECTED --> [*] : 审批完成
+CANCELLED --> [*] : 审批终止
+
+note right of PENDING
+  <b>待审核状态</b>
+  • 等待审批人审批
+  • 可被申请人撤销
+end note
+
+note right of APPROVED
+  <b>审核通过</b>
+  • 系统自动变更佣金比例
+  • 流程结束
+end note
+
+note left of REJECTED
+  <b>审核拒绝</b>
+  • 可重新提交申请
+  • 需修改申请内容
+end note
+
+note right of CANCELLED
+  <b>申请人撤销</b>
+  • 流程提前终止
+  • 需重新发起申请
+end note
+
+@enduml

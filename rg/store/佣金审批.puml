@@ -1,0 +1,67 @@
+@startuml
+
+title 佣金审批核心流程
+'left to right direction左对齐
+
+skinparam sequenceMessageAlign center
+skinparam BoxPadding 10
+skinparam ParticipantPadding 10
+skinparam ArrowColor #red
+skinparam handwritten true
+skinparam defaultTextAlignment left
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+
+
+actor operation as "运营" #yellow
+participant passport as "中台/联盟工作台"
+participant store as "店铺"
+participant wecom as "企业微信"
+actor  approve as "审批人"
+
+
+note right of operation #FFAAAA
+1. 通用规则
+2. 店铺规则
+3. 大单规则
+end note
+operation -> passport: 佣金规则变更
+passport -> store: 生成审批单
+store -> store:保存审批单(审批主表/明细表/范围表)
+store -> wecom:获取佣金审批模版
+wecom --> store: 返回审批模版消息
+store -> wecom: 提交企业微信审批
+wecom --> store: 返回审批单号
+store -> store--: 记录审批单号单审批表
+note right of wecom
+1、联盟一级审批【联盟发展运营组】，二级审批【喜哥】
+2、锐锢审批为【顺哥】
+end note
+wecom -> approve: 通知审批人审批
+store --> passport: 提交审批成功
+
+alt#Gold 审批通过
+approve -> wecom:审批通过
+wecom --> approve:审批通过
+wecom -> store: 审批通过
+store -> store: 更新审批状态-通过
+note right of store #FFAAAA: 店铺佣金变更
+store [#red]-> store: 更新店铺佣金配置
+store -> store:记录佣金变更历史
+wecom --> operation: 审批通过
+else  审批拒绝
+approve -> wecom: 审批拒绝
+wecom --> approve: 审批拒绝
+wecom -> store: 审批拒绝
+store -> store: 更新审批状态-拒绝
+wecom --> operation: 审批拒绝
+end
+group#LightCoral 审批撤销
+note right of operation #FFBBBB: 仅能申请人在【企业微信】中操作撤销（企业微信无撤销API）
+operation -> wecom: 撤销审批
+wecom -> store: 撤销审批通知
+store -> store: 更新审批状态-撤销
+end
+
+
+@enduml

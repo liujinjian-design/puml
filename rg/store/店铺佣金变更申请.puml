@@ -1,0 +1,40 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam noteTextAlignment left
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 50
+skinparam style strictuml
+
+title 店铺佣金变更审批流程
+
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #000000
+skinparam ActivityFontColor #000000
+skinparam ActivityStartEndColor #FF0000
+skinparam ActivityDiamondBackgroundColor #FFFFCC
+skinparam ActivityDiamondBorderColor #000000
+skinparam NoteBackgroundColor #E6E6FA
+skinparam NoteBorderColor #000000
+
+start
+#LightBlue:运营发起店铺佣金变更;
+#LightBlue:系统发起佣金变更审批;
+
+if (佣金是否存在变更?) then (是)
+    if (该店铺是否存在\n审批中的佣金变更?) then (是)
+        #FF6B6B:页面展示审批中的单号;
+        stop
+    elseif (存在店铺所属运营模式\n的通用规则佣金变更审批?) then (是)
+        #FF6B6B:页面展示通用规则审批单号;
+        stop
+    endif
+
+    #LightGreen:创建企业微信审批流;
+    stop
+else (否)
+    #FFB347:弹窗提示:\n"未做任何变更，无需发起审批";
+    note right: 无效变更拦截
+endif
+
+stop
+@enduml
