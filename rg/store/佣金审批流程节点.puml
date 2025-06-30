@@ -1,0 +1,68 @@
+@startuml
+!pragma useVerticalIf on
+skinparam shadowing false
+skinparam roundcorner 20
+skinparam defaultFontName "Microsoft YaHei"
+skinparam handwritten false
+
+title <b><color:#1E88E5>企业微信佣金审批流程</color></b>
+
+start
+#F5F5F5:创建企业微信佣金审批流;
+-> <b>判断租户类型</b>\n(<color:green>联盟两层审批</color>, <color:blue>锐锢一层审批</color>);
+
+if (租户类型 == RG000001) then (<color:blue>锐锢租户</color>)
+    #FFECB3:类目负责人（朱顺）审批;
+    if (审批结果 == 通过) then (<color:green>是</color>)
+        #C8E6C9:系统自动变更佣金比例;
+        stop
+    else (<color:red>否</color>)
+        #FFCDD2:记录拒绝原因;
+        stop
+    endif
+
+elseif (租户类型 == LM000001) then (<color:green>联盟租户</color>)
+    #FFECB3:联盟发展运营组;
+    if (审批结果 == 通过) then (<color:green>是</color>)
+        #FFCCBC:联盟负责人（喜哥）审批;
+        if (审批结果 == 通过) then (<color:green>是</color>)
+            #C8E6C9:系统自动变更佣金比例;
+            stop
+        else (<color:red>否</color>)
+            #FFCDD2:记录拒绝原因;
+            stop
+        endif
+    else (<color:red>否</color>)
+        #FFCDD2:记录拒绝原因;
+        stop
+    endif
+
+elseif (租户类型 == LM****) then (<color:green>联盟租户</color>)
+    #FFECB3:联盟发展运营组;
+    if (审批结果 == 通过) then (<color:green>是</color>)
+        #FFCCBC:联盟负责人（喜哥）审批;
+        if (审批结果 == 通过) then (<color:green>是</color>)
+            #C8E6C9:系统自动变更佣金比例;
+            stop
+        else (<color:red>否</color>)
+            #FFCDD2:记录拒绝原因;
+            stop
+        endif
+    else (<color:red>否</color>)
+        #FFCDD2:记录拒绝原因;
+        stop
+    endif
+
+else (<color:red>默认审批</color>)
+     #FFECB3:类目负责人（朱顺）审批;
+        if (审批结果 == 通过) then (<color:green>是</color>)
+            #C8E6C9:系统自动变更佣金比例;
+        else (<color:red>否</color>)
+            #FFCDD2:记录拒绝原因;
+
+        endif
+    stop
+endif
+
+
+@enduml
