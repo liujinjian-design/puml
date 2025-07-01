@@ -11,6 +11,8 @@ skinparam handwritten true
 skinparam defaultTextAlignment left
 skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
+skinparam defaultFontName "Microsoft YaHei"
+
 
 
 actor operation as "运营" #yellow
